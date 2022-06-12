@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#git ls-files -cdmo --exclude-standard | entr './hell/build.sh'
+
+# https://browsersync.io/docs/command-line
+
+out_dir="target/debug"
+
+# auto-reload
+# browser-sync start -s "$out_dir" --files $out_dir -b "chromium" --single
+
+# manual-reload
+browser-sync start -s "$out_dir" -b "chromium" --single --no-notify

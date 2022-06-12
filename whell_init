@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "> installing npm packages..."
+
+echo "---> installing typescript npm package"
+npm i -D typescript
