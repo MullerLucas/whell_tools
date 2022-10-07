@@ -1,18 +1,38 @@
 #!/bin/bash
 
-in_dir="src"
-out_dir="target/debug"
-#web_dir="../../www/helloki_org"
+sh_path=$(dirname $0)
+base_dir="$sh_path/.."
+in_dir="$base_dir/src"
+out_dir="$base_dir/target/debug"
+
+# handle input
+# ------------
+positional_args=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        "-b"|"--base-dir")
+            base_dir="$2"
+            shift 2
+            ;;
+        "-r"|"--reload")
+            should_reload="YES"
+            shift
+            ;;
+    esac
+done
+
+set -- "${positional_args[@]}"
 
 
-clear
+echo "> start building whell..."
+
 
 # clean up
 # --------
 echo "> removing old data..."
 rm -rf "${out_dir:?}/"*
 mkdir -p $out_dir
-#rm -rf "${web_dir:?}"
 
 # copy everything
 # ---------------
@@ -28,20 +48,17 @@ find "${out_dir}" -type f -name "*.ts" -exec rm {} \;
 # build typescript
 # ----------------
 echo "> building typescript..."
-tsc || exit 1
-
-# copy to web
-# ----------
-#echo "> copying data to web..."
-#cp -r "${out_dir}" "${web_dir}"
+tsc --build "$base_dir" || exit 1
 
 # reloading the page
 # ------------------
-echo "> reloading the page..."
-browser-sync reload
+if [[ -n $should_reload ]]; then
+    echo "> reloading the page..."
+    browser-sync reload
+fi
 
 
-echo "Done..."
+echo "> done bulding whell..."
 echo
 
 
